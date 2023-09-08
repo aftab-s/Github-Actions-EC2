@@ -15,7 +15,8 @@ jobs:
 
       - name: Set up SSH
         run: |
-          echo "$SSH_PRIVATE_KEY" | ssh-add - 
+          eval $(ssh-agent -s)
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
           ssh-add -l
           ssh -o StrictHostKeyChecking=no -T git@github.com
         env:
