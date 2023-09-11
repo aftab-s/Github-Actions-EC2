@@ -27,7 +27,7 @@ jobs:
         USER: ubuntu 
       run: |
         cd ${{ github.workspace }}
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r gradient.html ${USER}@${HOST}:/var/www/html
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r gradient.html assets ${USER}@${HOST}:/var/www/html
         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${USER}@${HOST} '
           sudo rm /var/www/html/index.html
           sudo mv /var/www/html/gradient.html /var/www/html/index.html
