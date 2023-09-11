@@ -23,4 +23,4 @@ jobs:
     
     - name: Deploy to EC2
       run: |
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r * ubuntu@${{ secrets.SERVER }}:/var/www/html
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r * root@${{ secrets.SERVER }}:/var/www/html
