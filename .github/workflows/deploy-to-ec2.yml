@@ -1,9 +1,9 @@
-name: Deploy to EC2
+name: Deploy to EC2 
 
-on: 
+on:
   push:
     branches:
-      - main
+      - main   
 
 jobs:
 
@@ -14,13 +14,19 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up SSH 
-      run: |
+    - name: Set up SSH
+      run: | 
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan ${{ secrets.SERVER }} >> ~/.ssh/known_hosts
-    
+
     - name: Deploy to EC2
+      env:
+        HOST: ${{ secrets.SERVER }}
+        USER: ubuntu 
       run: |
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r * root@${{ secrets.SERVER }}:/var/www/html
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r . ${USER}@${HOST}:/var/www/html
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${USER}@${HOST} '
+          sudo systemctl restart apache2
+        '
