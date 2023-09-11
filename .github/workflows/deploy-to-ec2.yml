@@ -1,28 +1,26 @@
 name: Deploy to EC2
 
-on:
+on: 
   push:
     branches:
       - main
 
 jobs:
+
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Set up SSH
-        run: |
-          eval $(ssh-agent -s)
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-          ssh-add -l
-          ssh -o StrictHostKeyChecking=no -T git@github.com
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      
-
-      - name: Deploy to EC2
-        run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r * ubuntu@ec2-18-206-215-252.compute-1.amazonaws.com:/var/www/html/
+    - name: Set up SSH 
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan ${{ secrets.SERVER }} >> ~/.ssh/known_hosts
+    
+    - name: Deploy to EC2
+      run: |
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r . ubuntu@${{ secrets.SERVER }}:/var/www/html
