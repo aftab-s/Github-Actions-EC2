@@ -20,18 +20,29 @@
         header {
             background: linear-gradient(to right, #ffafbd, #ffc3a0);
             padding: 20px;
+            display: flex;
+            justify-content: space-between; /* Add this to align content on the left and right */
+            align-items: center; /* Center content vertically */
             border-bottom-left-radius: 50px;
             border-bottom-right-radius: 50px;
         }
 
+        .logo {
+            display: flex; /* Create a nested flex container for logo and text */
+            align-items: center; /* Center logo and text vertically */
+        }
+
+        .logo img {
+            width: 100px; /* Adjust the width of the logo as needed */
+            margin-right: 10px; /* Add some spacing between logo and text */
+        }
+
         h1 {
             display: inline-block;
-            padding: 8px 10px; /* Increase the left and right padding by 2 pixels */
-            border-radius: 20px;
-            background-color: #fff;
-            color: #f06;
+            color: rgb(255, 255, 255);
             font-size: 2rem;
             margin: 0;
+            margin-left: -20px;
         }
         
 
@@ -73,9 +84,12 @@
 </head>
 <body>
     <header>
-        <h1>Gradient</h1>
+        <div class="logo">
+            <img src="logo-no-background.png" alt="Logo"> <!-- Add your logo image here -->
+            <h1>Gradient</h1>
+        </div>
         <nav>
-            <a href="#">Home1.0</a>
+            <a href="#">Home</a>
             <a href="#">About</a>
             <a href="#">Services</a>
             <a href="#">Contact</a>
