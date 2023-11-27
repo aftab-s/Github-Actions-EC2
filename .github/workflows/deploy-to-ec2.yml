@@ -1,9 +1,12 @@
-name: Deploy to EC2 
+name: Deploy to EC2 (Prod CI)
 
 on:
   push:
     branches:
-      - main   
+      - master
+  pull_request:
+    branches:
+      - master   
 
 jobs:
 
@@ -27,9 +30,14 @@ jobs:
         USER: ubuntu 
       run: |
         cd ${{ github.workspace }}
-        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r gradient.html assets ${USER}@${HOST}:/var/www/html
         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ${USER}@${HOST} '
-          sudo rm /var/www/html/index.html
-          sudo mv /var/www/html/gradient.html /var/www/html/index.html
-          sudo systemctl restart apache2
+          cd /home/ubuntu/kks-backend
+          git fetch origin master
+          git pull origin master
+          sudo docker build -t kks-backend .
+          sudo docker stop kks-backend || echo "" ; sudo docker rm kks-backend || echo "kks-backend docker not found !!!"
+          sudo docker run -d --name kks-backend -p 7000:7000 kks-backend
+          sudo docker rmi $(sudo docker images -f "dangling=true" -q) --force || true
+          sudo docker image prune -f
+          sudo systemctl restart nginx
         '
